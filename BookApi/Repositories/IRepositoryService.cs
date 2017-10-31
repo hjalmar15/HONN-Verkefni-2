@@ -34,8 +34,6 @@ namespace BookApi.Repositories
         // User and book Reviews
         IEnumerable<ReviewsDTO> getReviewsById(int userId);
         ReviewsDTO getReviewById(int bookId, int userId);
-        void editReviewByIds(int bookId, int userId);
-        void deleteReviewByIds(int bookId, int userId);
 
         // BookReviews
         IEnumerable<ReviewsDTO> getBookReview();
