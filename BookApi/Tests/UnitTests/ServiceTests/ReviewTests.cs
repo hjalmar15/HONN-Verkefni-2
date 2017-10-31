@@ -142,8 +142,6 @@ namespace BookApi.Tests
             reviewscount.BookName.Should().BeEquivalentTo("The glorious book of glory");
             reviewscount.Stars.Should().BeLessOrEqualTo(3);
             ReviewServices.Should().NotBeNull();
-
-
         }
         [TestMethod]
         public void getReviewsById()

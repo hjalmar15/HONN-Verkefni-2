@@ -295,6 +295,14 @@ namespace BookApi.Tests
 
         #region FailingPathsBooks
 
+        //Post a book with all fields empty
+
+        //Put a book with an empty field
+
+        //Put a book that doesn't exist
+
+        //Delete a book that doesn't exist
+
         #endregion
 
 		#endregion
@@ -551,7 +559,7 @@ namespace BookApi.Tests
             response.Wait();
 
             Assert.IsNotNull(booksOnLoan);
-            Assert.AreEqual(booksOnLoan.Count, 4);
+            Assert.AreEqual(booksOnLoan.Count, 3);
         }
 
         //Post on /users/{user_id}/books/{book_id} DONE
@@ -606,6 +614,9 @@ namespace BookApi.Tests
             Assert.AreEqual(booksOnLoan[booksOnLoan.Count - 1].Author, book.Author);
             Assert.AreEqual(booksOnLoan[booksOnLoan.Count - 1].DatePublished, book.DatePublished);
             Assert.AreEqual(booksOnLoan[booksOnLoan.Count - 1].ISBN, book.ISBN);
+
+            //Delete loan
+            var deleteResponse = await client.DeleteAsync($"/api/v1/users/{user_id}/books/{book_id}");
         }
 
         //DELETE on /users/{user_id}/books/{book_id} DONE
@@ -767,8 +778,67 @@ namespace BookApi.Tests
 
         #region FailingPathsUsersBooks
         
-        //Book on loan where user already has book on loan
+        //Post a book on loan where user already has book on loan
+        [TestMethod]
+        public void AddBookAgainOnLoanByUser()
+        {
+            Random r = new Random();
+            int userInt = r.Next(1, 100); 
+            int bookInt = r.Next(1,1000);
 
+            int user_id = 90;
+            int book_id = bookInt;
+
+            String today = DateTime.Now.ToString("yyyy-MM-dd");
+
+            UserLoan newLoan = new UserLoan {
+                LoanDate = today,
+                ReturnedDate = ""
+            };
+
+            var stringContent = new StringContent(JsonConvert.SerializeObject(newLoan), Encoding.UTF8, "application/json");
+            string message = "";
+            var postResponse = client.PostAsync($"/api/v1/users/{user_id}/books/{book_id}", stringContent)            
+            .ContinueWith((taskResponse) =>
+            {
+                var res = taskResponse.Result;
+                var stringur = res.Content.ReadAsStringAsync();
+                stringur.Wait();
+                message = stringur.Result;
+            });
+            postResponse.Wait();
+            Assert.IsTrue(postResponse.IsCompletedSuccessfully);
+
+            UserLoan newLoanAgain = new UserLoan {
+                LoanDate = today,
+                ReturnedDate = ""
+            };
+
+            var stringContent2 = new StringContent(JsonConvert.SerializeObject(newLoanAgain), Encoding.UTF8, "application/json");
+            string message2 = "";
+            var postResponse2 = client.PostAsync($"/api/v1/users/{user_id}/books/{book_id}", stringContent2)            
+            .ContinueWith((taskResponse) =>
+            {
+                var res = taskResponse.Result;
+                var stringur = res.Content.ReadAsStringAsync();
+                stringur.Wait();
+                message2 = stringur.Result;
+            });
+            postResponse2.Wait();
+            Assert.AreEqual(message2, "Book already loaned to user");
+            Assert.IsTrue(postResponse2.IsCompletedSuccessfully);
+
+            //Delete loan
+            var deleteResponse = client.DeleteAsync($"/api/v1/users/{user_id}/books/{book_id}")
+            .ContinueWith((taskResponse) =>
+            {
+                var res = taskResponse.Result;
+                var stringur = res.Content.ReadAsStringAsync();
+                stringur.Wait();
+                message2 = stringur.Result;
+            });
+            deleteResponse.Wait();
+        }
         //Put a book on loan with returndate in the past and try to delete
 
         //Post a book that doesn't exist
