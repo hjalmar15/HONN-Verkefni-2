@@ -1,4 +1,8 @@
 language: csharp
+dist: trusty
+sudo: required
+mono: none
+dotnet: 1.0.1
 
 before_script:
   - chmod a+x ./travis-build.sh
