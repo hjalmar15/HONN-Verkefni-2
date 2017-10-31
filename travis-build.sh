@@ -1,2 +1,5 @@
+#!binbash
+cd ./Api
 dotnet restore
-dotnet build **/project.json
+dotnet build
+cd ..
