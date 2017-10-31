@@ -210,7 +210,7 @@ namespace BookApi.Api.Controllers
         { 
             DateTime LoanDate;
             int LoanDuration;
-            if(loanDate != null)
+            if(loanDate != null)if(loanDate != null)
             {
                 LoanDate = Convert.ToDateTime(loanDate);
                 if(loanDuration != null)
