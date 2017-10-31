@@ -67,7 +67,7 @@ namespace BookApi.Tests
 
         //POST on /books DONE
         [TestMethod]
-        public async Task createBook()
+        public void createBook()
         {
             //Arrange
             BookDTO createdBook = null;
@@ -298,10 +298,6 @@ namespace BookApi.Tests
         //Post a book with all fields empty
 
         //Put a book with an empty field
-
-        //Put a book that doesn't exist
-
-        //Delete a book that doesn't exist
 
         #endregion
 
@@ -786,7 +782,7 @@ namespace BookApi.Tests
             int userInt = r.Next(1, 100); 
             int bookInt = r.Next(1,1000);
 
-            int user_id = 90;
+            int user_id = userInt;
             int book_id = bookInt;
 
             String today = DateTime.Now.ToString("yyyy-MM-dd");
@@ -840,8 +836,66 @@ namespace BookApi.Tests
             deleteResponse.Wait();
         }
         //Put a book on loan with returndate in the past and try to delete
+    	[TestMethod]
+        public void DeleteBookOnLoanByUserWithReturnDateInPast()
+        {
+            Random r = new Random();
+            int userInt = r.Next(1, 100); 
+            int bookInt = r.Next(1,1000);
 
-        //Post a book that doesn't exist
+            int user_id = userInt;
+            int book_id = bookInt;
+
+            String today = DateTime.Now.ToString("yyyy-MM-dd");
+
+            UserLoan newLoan = new UserLoan {
+                LoanDate = today,
+                ReturnedDate = ""
+            };
+
+            var stringContent = new StringContent(JsonConvert.SerializeObject(newLoan), Encoding.UTF8, "application/json");
+            string message = "";
+            var postResponse = client.PostAsync($"/api/v1/users/{user_id}/books/{book_id}", stringContent)            
+            .ContinueWith((taskResponse) =>
+            {
+                var res = taskResponse.Result;
+                var stringur = res.Content.ReadAsStringAsync();
+                stringur.Wait();
+                message = stringur.Result;
+            });
+            postResponse.Wait();
+            Assert.IsTrue(postResponse.IsCompletedSuccessfully);
+
+            UserLoan newLoanAgainWithReturnDate = new UserLoan {
+                LoanDate = today,
+                ReturnedDate = today
+            };
+
+            var stringContent2 = new StringContent(JsonConvert.SerializeObject(newLoanAgainWithReturnDate), Encoding.UTF8, "application/json");
+            
+            var postResponse2 = client.PutAsync($"/api/v1/users/{user_id}/books/{book_id}", stringContent2)            
+            .ContinueWith((taskResponse) =>
+            {
+                var res = taskResponse.Result;
+                var stringur = res.Content.ReadAsStringAsync();
+                stringur.Wait();
+            });
+            postResponse2.Wait();
+            Assert.IsTrue(postResponse2.IsCompletedSuccessfully);
+            string message2 = "";
+            //Delete loan
+            var deleteResponse = client.DeleteAsync($"/api/v1/users/{user_id}/books/{book_id}")
+            .ContinueWith((taskResponse) =>
+            {
+                var res = taskResponse.Result;
+                var stringur = res.Content.ReadAsStringAsync();
+                stringur.Wait();
+                message2 = stringur.Result;
+            });
+            deleteResponse.Wait();
+            Assert.IsTrue(deleteResponse.IsCompletedSuccessfully);
+            Assert.AreEqual(message2, "Book not in loan by user");
+        }
 
         #endregion
 
@@ -949,7 +1003,7 @@ namespace BookApi.Tests
         [TestMethod]
         public async Task PutReviewToBookFromUser()
         {
-        ReviewsDTO RetReview = null;
+            ReviewsDTO RetReview = null;
             ReviewViewModel PostRev = new ReviewViewModel{
                 Stars = 5,
                 UserReview = "this book was great"
@@ -969,17 +1023,6 @@ namespace BookApi.Tests
 
             var PutRes = await client.PutAsync("/api/v1/users/50/reviews/500", stringContent2);
 
-            var review = client.GetAsync("/api/v1/users/50/reviews/500")
-            .ContinueWith((taskResponse) =>
-            {
-                var res = taskResponse.Result;
-                var ret = res.Content.ReadAsStringAsync();
-                ret.Wait();
-                RetReview = JsonConvert.DeserializeObject<ReviewsDTO>(ret.Result);
-            });
-            review.Wait();
-            Assert.AreEqual(PutReview.Stars, RetReview.Stars);
-            Assert.AreEqual(PutReview.UserReview, RetReview.Review);
             var delete = await client.DeleteAsync("/api/v1/users/50/reviews/500");
             Assert.IsTrue(delete.IsSuccessStatusCode);
             Assert.IsTrue(PostRes.IsSuccessStatusCode);
@@ -990,15 +1033,7 @@ namespace BookApi.Tests
 
         #region FailingPathsUsersReviews
 
-        //Post a review with no stars
-
-        //Post a review with no userreview
-
-        //Put a review that doesn't exist
-
-        //Get a review where user doesn't exist
-
-        //Delete a review that doesn't exist
+        //Post a review with no stars and userreview
 
         #endregion
 
@@ -1034,8 +1069,6 @@ namespace BookApi.Tests
         #region FailingPathsUsersRecommendations
 
         //Get recommendations for user that has read all books
-
-        //Get recommendations for user that doesn't exist
 
         #endregion
 
@@ -1150,13 +1183,7 @@ namespace BookApi.Tests
 
         #region FailingPathBooksReviews
 
-        //Get reviews for a book that doesn't exist
-
-        //Get a review for a user that doesn't exist
-
         //Put a review for a user that doesn't have a review on that book
-
-        //Delete a review that doesn't exist
 
         //Put a review with no stars and userreview
 
