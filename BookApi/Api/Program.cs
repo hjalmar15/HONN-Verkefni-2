@@ -21,19 +21,7 @@ namespace Api
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-
-                try
-                {
-                    // Requires using RazorPagesMovie.Models;
-                    LoadFiles.Initialize(services);
-                }
-                catch (Exception ex)
-                {
-                    /* 
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred seeding the DB.");
-                    */
-                }
+                LoadFiles.Initialize(services);
             }
 
             host.Run();
