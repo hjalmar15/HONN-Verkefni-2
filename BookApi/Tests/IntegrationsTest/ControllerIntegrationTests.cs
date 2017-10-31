@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -1048,8 +1047,10 @@ namespace BookApi.Tests
         [TestMethod]
         public void GetReviewByBookAndId()
         {
+            int book_id = 797;
+            int user_id = 3;
             ReviewsDTO review = null;
-            var response = client.GetAsync("/api/v1/books/797/reviews/3")
+            var response = client.GetAsync($"/api/v1/books/{book_id}/reviews/{user_id}")
             .ContinueWith((taskResponse) =>
             {
                 var res = taskResponse.Result;
@@ -1074,17 +1075,20 @@ namespace BookApi.Tests
                 UserReview = "This was a mistakse."
             };
 
+            int book_id = 1;
+            int user_id = 1;
+
             var stringContent1 = new StringContent(JsonConvert
             .SerializeObject(PostRev), Encoding.UTF8, "application/json");
 
             var  stringContent2 = new StringContent(JsonConvert
             .SerializeObject(PutReview), Encoding.UTF8, "application/json");
 
-            var PostRes = await client.PostAsync("/api/v1/users/1/reviews/1", stringContent1);
+            var PostRes = await client.PostAsync($"/api/v1/users/{user_id}/reviews/{book_id}", stringContent1);
 
-            var PutRes = await client.PutAsync("/api/v1/books/1/reviews/1", stringContent2);
+            var PutRes = await client.PutAsync($"/api/v1/books/{book_id}/reviews/{user_id}", stringContent2);
 
-            var delete = await client.DeleteAsync("/api/v1/users/1/reviews/1");
+            var delete = await client.DeleteAsync($"/api/v1/users/{user_id}/reviews/{book_id}");
             Assert.IsTrue(delete.IsSuccessStatusCode);
             Assert.IsTrue(PostRes.IsSuccessStatusCode);
             Assert.IsTrue(PutRes.IsSuccessStatusCode);
@@ -1098,12 +1102,14 @@ namespace BookApi.Tests
                 Stars = 5,
                 UserReview = "this book was great"
             };
+            int book_id = 2;
+            int user_id = 2;
             var stringContent1 = new StringContent(JsonConvert
             .SerializeObject(PostRev), Encoding.UTF8, "application/json");
 
-            var PostRes = await client.PostAsync("/api/v1/users/2/reviews/2", stringContent1);
+            var PostRes = await client.PostAsync($"/api/v1/users/{user_id}/reviews/{book_id}", stringContent1);
 
-            var delete = await client.DeleteAsync("/api/v1/books/2/reviews/2");
+            var delete = await client.DeleteAsync($"/api/v1/users/{user_id}/reviews/{book_id}");
             Assert.IsTrue(delete.IsSuccessStatusCode);
             Assert.IsTrue(PostRes.IsSuccessStatusCode);
         }
@@ -1133,7 +1139,8 @@ namespace BookApi.Tests
         public void getAllReviewsForBook()
         {
             List<ReviewsDTO> review = null;
-            var response = client.GetAsync("/api/v1/books/413/reviews")
+            int book_id = 413;
+            var response = client.GetAsync($"/api/v1/books/{book_id}/reviews")
             .ContinueWith((taskResponse) =>
             {
                 var res = taskResponse.Result;
@@ -1150,15 +1157,56 @@ namespace BookApi.Tests
 
         #region FailingPathBooksReviews
 
-        //Get reviews for a book that doesn't exist
-
-        //Get a review for a user that doesn't exist
-
-        //Put a review for a user that doesn't have a review on that book
-
         //Delete a review that doesn't exist
 
+        [TestMethod]
+        public async Task DeleteReviewThatDoesNotExists()
+        {
+            ReviewsDTO RetReview = null;
+            ReviewViewModel PostRev = new ReviewViewModel{
+                Stars = 5,
+                UserReview = "this book was great"
+            };
+            int book_id = -1;
+            int user_id = -1;
+            var stringContent1 = new StringContent(JsonConvert
+            .SerializeObject(PostRev), Encoding.UTF8, "application/json");
+
+            var delete = await client.DeleteAsync($"/api/v1/users/{user_id}/reviews/{book_id}");
+            Assert.IsFalse(delete.IsSuccessStatusCode);
+        }
+
+
         //Put a review with no stars and userreview
+
+        [TestMethod]
+        public async Task putReviewWithNoStarsFailing()
+        {
+            ReviewsDTO RetReview = null;
+            ReviewViewModel PostRev = new ReviewViewModel{
+                Stars = 5,
+                UserReview = "this book was great"
+            };
+            ReviewViewModel PutReview = new ReviewViewModel{
+            };
+            int user_id = 50;
+            int book_id = 500;
+            var stringContent1 = new StringContent(JsonConvert
+            .SerializeObject(PostRev), Encoding.UTF8, "application/json");
+
+            var  stringContent2 = new StringContent(JsonConvert
+            .SerializeObject(PutReview), Encoding.UTF8, "application/json");
+
+            var PostRes = await client.PostAsync($"/api/v1/users/{user_id}/reviews/{book_id}", stringContent1);
+
+            var PutRes = await client.PutAsync($"/api/v1/users/{user_id}/reviews/{book_id}", stringContent2);
+
+            var delete = await client.DeleteAsync($"/api/v1/users/{user_id}/reviews/{book_id}");
+            Assert.IsTrue(delete.IsSuccessStatusCode);
+            Assert.IsTrue(PostRes.IsSuccessStatusCode);
+            Assert.IsFalse(PutRes.IsSuccessStatusCode);
+            
+        }
 
         #endregion
 
