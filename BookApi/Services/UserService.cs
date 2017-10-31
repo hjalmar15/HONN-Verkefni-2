@@ -24,29 +24,44 @@ namespace BookApi.Services
             _repo = repo;
         }
         
-        // Users
+        /// <summary>
+        /// Gets all users from repo with loanDate and loanDuration if set
+        /// </summary>
         public IEnumerable<CreatedUser> getUser(DateTime? loanDate, int? loanDuration)
         {
-            var user = _repo.getUser(loanDate, loanDuration);
-            return user;
+            return _repo.getUser(loanDate, loanDuration);
         }
+        
+        /// <summary>
+        /// Calls the repo to add a user
+        /// </summary>
         public CreatedUser addUser(CreateUser user)
         {
-           return _repo.addUser(user);
-        }
+            return _repo.addUser(user);
+        }   
+
+        /// <summary>
+        /// Calls the repo to delete a user
+        /// </summary>
         public bool deleteUser(int userId)
         {
             return _repo.deleteUser(userId);
         }
+                
+        /// <summary>
+        /// Gets a user by its ID from repo
+        /// </summary>
         public UserAndLoansDTO getUserById(int userId)
         {
-            var user = _repo.getUserById(userId);
-            return user;
+            return _repo.getUserById(userId);
         }
+                
+        /// <summary>
+        /// Calls the repo to edit a specific user
+        /// </summary>
         public CreatedUser editUser(int userId, CreateUser user)
         {
-            var returnUser = _repo.editUser(userId, user);
-            return returnUser;
+            return _repo.editUser(userId, user);
         }
     }
 }
