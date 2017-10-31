@@ -8,14 +8,6 @@ By
 [![Build Status](https://travis-ci.org/hjalmar15/HONN-Verkefni-2.svg?branch=master)](https://travis-ci.org/hjalmar15/HONN-Verkefni-2)
 
 
-## How to run
-
-
-
-
-
-
-
 ## URIs and example method calls
 
 | URI                                | HTTP Method | Útskýring                                          | Example Method call                                                                                                                                                                                                   | Example JSON body                                                                                                                                                                     |
