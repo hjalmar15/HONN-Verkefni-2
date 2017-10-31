@@ -28,6 +28,7 @@ namespace BookApi.Repositories
         // Books 
 		public IEnumerable<BookDTO> getBooks(DateTime? loanDate, int? loanDuration)
         {
+            DateTime LoanDate = Convert.ToDateTime(loanDate);
 
             if(loanDate == null && loanDuration == null){
                 var books = (from b in _db.Books 
@@ -43,9 +44,9 @@ namespace BookApi.Repositories
             }
             else if(loanDate != null && loanDuration == null)
             {
-                DateTime LoanDate = Convert.ToDateTime(loanDate);
+                //Done
                 var book = (from b in _db.Books join ub in _db.UserBooks on b.Id equals ub.BookId
-                        where ub.LoanDate.Year == LoanDate.Year && ub.LoanDate.DayOfYear == LoanDate.DayOfYear
+                        where ub.LoanDate.Ticks <= LoanDate.Ticks && (ub.ReturnedDate.Ticks == 0 || ub.ReturnedDate.Ticks > LoanDate.Ticks)
                         select new BookDTO
                         {
                             Id = b.Id,
@@ -58,8 +59,9 @@ namespace BookApi.Repositories
             }
             else if(loanDate == null && loanDuration != null)
             {
+                //Done
                 var book = (from b in _db.Books join ub in _db.UserBooks on b.Id equals ub.BookId
-                        where loanDuration <= (DateTime.Now - ub.LoanDate).TotalDays && ub.ReturnedDate == null
+                        where (ub.ReturnedDate.Ticks != 0 && (loanDuration <= (ub.ReturnedDate - ub.LoanDate).TotalDays)) || (ub.ReturnedDate.Ticks == 0 && (loanDuration <= (DateTime.Now - ub.LoanDate).TotalDays))
                         select new BookDTO
                         {
                             Id = b.Id,
@@ -72,11 +74,10 @@ namespace BookApi.Repositories
             }
             else
             {
-                DateTime LoanDate = Convert.ToDateTime(loanDate);
+                //Done
                 var book = (from b in _db.Books join ub in _db.UserBooks on b.Id equals ub.BookId
-                        where loanDuration == (DateTime.Now - ub.LoanDate).TotalDays && ub.ReturnedDate == null &&
-                        ub.LoanDate.Year == LoanDate.Year && ub.LoanDate.DayOfYear == LoanDate.DayOfYear 
-                        
+                        where ((ub.LoanDate.Ticks <= LoanDate.Ticks && (ub.ReturnedDate.Ticks == 0 || ub.ReturnedDate.Ticks > LoanDate.Ticks)) &&
+                            (ub.ReturnedDate.Ticks != 0 && (loanDuration <= (ub.ReturnedDate - ub.LoanDate).TotalDays)) || (ub.ReturnedDate.Ticks == 0 && (loanDuration <= (DateTime.Now - ub.LoanDate).TotalDays))) 
                         select new BookDTO
                         {
                             Id = b.Id,
@@ -210,6 +211,8 @@ namespace BookApi.Repositories
          // Users
         public IEnumerable<CreatedUser> getUser(DateTime? loanDate, int? loanDuration)
         {
+            DateTime LoanDate = Convert.ToDateTime(loanDate);
+
             if(loanDate == null && loanDuration == null){
                 var user = (from u in _db.Users 
                         select new CreatedUser
@@ -224,9 +227,9 @@ namespace BookApi.Repositories
             }
             else if(loanDate != null && loanDuration == null)
             {
-                DateTime LoanDate = Convert.ToDateTime(loanDate);
+                //Done
                 var user = (from u in _db.Users join ub in _db.UserBooks on u.Id equals ub.UserId
-                        where ub.LoanDate.Year == LoanDate.Year && ub.LoanDate.DayOfYear == LoanDate.DayOfYear
+                        where ub.LoanDate.Ticks <= LoanDate.Ticks && (ub.ReturnedDate.Ticks == 0 || ub.ReturnedDate.Ticks > LoanDate.Ticks)
                         select new CreatedUser
                         {
                             Id = u.Id,
@@ -239,8 +242,9 @@ namespace BookApi.Repositories
             }
             else if(loanDate == null && loanDuration != null)
             {
+                //Done
                 var user = (from u in _db.Users join ub in _db.UserBooks on u.Id equals ub.UserId
-                        where loanDuration <= (DateTime.Now - ub.LoanDate).TotalDays && ub.ReturnedDate == null
+                        where (ub.ReturnedDate.Ticks != 0 && (loanDuration <= (ub.ReturnedDate - ub.LoanDate).TotalDays)) || (ub.ReturnedDate.Ticks == 0 && (loanDuration <= (DateTime.Now - ub.LoanDate).TotalDays))
                         select new CreatedUser
                         {
                             Id = u.Id,
@@ -253,11 +257,10 @@ namespace BookApi.Repositories
             }
             else
             {
-                DateTime LoanDate = Convert.ToDateTime(loanDate);
+                //Done
                 var user = (from u in _db.Users join ub in _db.UserBooks on u.Id equals ub.UserId
-                        where loanDuration == (DateTime.Now - ub.LoanDate).TotalDays && ub.ReturnedDate == null &&
-                        ub.LoanDate.Year == LoanDate.Year && ub.LoanDate.DayOfYear == LoanDate.DayOfYear 
-                        
+                        where ((ub.LoanDate.Ticks <= LoanDate.Ticks && (ub.ReturnedDate.Ticks == 0 || ub.ReturnedDate.Ticks > LoanDate.Ticks)) &&
+                            (ub.ReturnedDate.Ticks != 0 && (loanDuration <= (ub.ReturnedDate - ub.LoanDate).TotalDays)) || (ub.ReturnedDate.Ticks == 0 && (loanDuration <= (DateTime.Now - ub.LoanDate).TotalDays))) 
                         select new CreatedUser
                         {
                             Id = u.Id,
