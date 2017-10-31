@@ -17,7 +17,9 @@ namespace BookApi.Tests
         IEnumerable<CreatedUser> _UsersList;
         Mock<IRepositoryService> _mockRepo;
         UserService UserServices;
-
+        ///<summary>
+        /// Initilizes some values into the list and sets the mockRepo
+        ///</summary>
         [TestInitialize]
         public void TestInitialize()
         {
@@ -49,6 +51,9 @@ namespace BookApi.Tests
             _mockRepo = new Mock<IRepositoryService>();
         }
 
+        ///<summary>
+        /// Gets all users
+        ///</summary>
         [TestMethod]
         public void getAllUsers()
         {
@@ -59,6 +64,9 @@ namespace BookApi.Tests
             users.Should().HaveCount(3);
         }
 
+        ///<summary>
+        /// Gets a user from an ID
+        ///</summary>
         [TestMethod]
         public void getSpecificUser()
         {
@@ -76,6 +84,9 @@ namespace BookApi.Tests
             user.Should().Equals(retUser);
         }
 
+        ///<summary>
+        /// Posts a user to the list
+        ///</summary>
         [TestMethod]
         public void postAUser()
         {
@@ -103,6 +114,9 @@ namespace BookApi.Tests
             user.Should().NotBeNull();
         }
 
+        ///<summary>
+        /// Changes a user according to its ID 
+        ///</summary>
         [TestMethod]
         public void changeSpecificUser()
         {
@@ -129,6 +143,9 @@ namespace BookApi.Tests
             edited.PhoneNumber.Should().BeEquivalentTo(afterChange.PhoneNumber);
         }
 
+        ///<summary>
+        /// Deletes a user to the list
+        ///</summary>
         [TestMethod]
         public void deleteSpecificUser()
         {
