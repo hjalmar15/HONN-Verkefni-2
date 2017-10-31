@@ -4,5 +4,8 @@ install:
 - dotnet restore
 
 script:
+- cd BookApi/Api
 - dotnet build
-- dotnet test BookApi.Tests/Tests.csproj
+- cd ..
+- cd Tests
+- dotnet test 
