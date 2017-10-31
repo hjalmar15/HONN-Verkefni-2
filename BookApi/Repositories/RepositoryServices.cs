@@ -25,7 +25,17 @@ namespace BookApi.Repositories
             _db = db;
         }
 
-        // Books 
+
+
+
+        /// <summary>
+        /// Get all books from database that 
+        /// and if queryparameter are not null
+        /// checks loan durations and loandate.
+        /// <param name = "loanDate"></param>
+        /// <param name = "loanDate"></param>
+        /// <returns type = "IEnumerable<BookDTO>"> </returns>
+        /// </summary>
 		public IEnumerable<BookDTO> getBooks(DateTime? loanDate, int? loanDuration)
         {
             DateTime LoanDate = Convert.ToDateTime(loanDate);
@@ -90,6 +100,11 @@ namespace BookApi.Repositories
             }
         }
 
+        /// <summary>
+        /// add book to database 
+        /// <param name = "book"></param>
+        /// <returns type = "BookDTO"> </returns>
+        /// </summary>
         public BookDTO addBook(NewBook book)
         {
             Book newEntityBook = new Book {
@@ -114,6 +129,12 @@ namespace BookApi.Repositories
             return bookCreated;
         }
 
+        /// <summary>
+        /// Returns a book from datbase from specific Id
+        /// if not found returns null.
+        /// <param name = "bookID"></param>
+        /// <returns type = "BookAndLoansDTO"> </returns>
+        /// </summary>
         public BookAndLoansDTO getBookById(int bookID)
         {
             var book = (from b in _db.Books 
@@ -135,6 +156,12 @@ namespace BookApi.Repositories
             return book;
         }
 
+
+        /// <summary>
+        /// Get all loans from book by Id
+        /// <param name = "bookID"></param>
+        /// <returns type = "IEnumerable<LoanDTO>"> </returns>
+        /// </summary>
         public IEnumerable<LoanDTO> getLoansForBookById(int bookId)
         {
             var loans = (from ub in _db.UserBooks
@@ -157,6 +184,12 @@ namespace BookApi.Repositories
             return loans;
         }
        
+
+        /// <summary>
+        /// Deletes a single book from database
+        /// <param name = "bookID"></param>
+        /// <returns type = "BookDTO"> </returns>
+        /// </summary>
         public BookDTO deleteBook(int bookId)
         {
             var toDelete = (from b in _db.Books
@@ -179,6 +212,13 @@ namespace BookApi.Repositories
             return null;
         }
 
+
+        /// <summary>
+        ///  Edits a single book from database.
+        /// <param name = "bookID"></param>
+        /// <param name = "book"></param>
+        /// <returns type = "BookDTO"> </returns>
+        /// </summary>
         public BookDTO editBook(int bookId, NewBook book)
         {
             var result = (from b in _db.Books
@@ -208,7 +248,14 @@ namespace BookApi.Repositories
             }
         }
 
-         // Users
+        /// <summary>
+        ///  Gets users from database and if loandate and 
+        /// loanduration is not null then finds all users 
+        /// that fullfills the rquirements.
+        /// <param name = "loanDate"></param>
+        /// <param name = "loanDuration"></param>
+        /// <returns type = "IEnumerable<CreatedUser>"> </returns>
+        /// </summary>
         public IEnumerable<CreatedUser> getUser(DateTime? loanDate, int? loanDuration)
         {
             DateTime LoanDate = Convert.ToDateTime(loanDate);
@@ -272,6 +319,13 @@ namespace BookApi.Repositories
                 return user;
             }
         }
+
+
+        /// <summary>
+        /// Add user to database 
+        /// <param name = "user"></param>
+        /// <returns type = "CreatedUser"> </returns>
+        /// </summary>
         public CreatedUser addUser(CreateUser user)
         {
             User newUser = new User{
@@ -294,6 +348,12 @@ namespace BookApi.Repositories
             };
             return retUser;
         }
+
+        /// <summary>
+        /// Deletes a single user from database
+        /// <param name = "userId"></param>
+        /// <returns type = "bool"> </returns>
+        /// </summary>
         public bool deleteUser(int userId)
         {
             var toDelete = (from u in _db.Users
@@ -308,6 +368,12 @@ namespace BookApi.Repositories
             }
             return false;
         }
+
+        /// <summary>
+        /// Gets a single user from database.
+        /// <param name = "userId"></param>
+        /// <returns type = "UserAndLoansDTO"> </returns>
+        /// </summary>
         public UserAndLoansDTO getUserById(int userId)
         {
             var user = (from u in _db.Users
@@ -330,6 +396,13 @@ namespace BookApi.Repositories
             }
             return null;
         }
+
+        /// <summary>
+        /// Edits a single user from database
+        /// <param name = "userId"></param>
+        /// <param name = "user"></param>
+        /// <returns type = "CreatedUser"> </returns>
+        /// </summary>
         public CreatedUser editUser(int userId, CreateUser user)
         {
             CreatedUser updatedUser = new CreatedUser{
@@ -366,8 +439,12 @@ namespace BookApi.Repositories
             }
         }
 
-        // Book To User
 
+        /// <summary>
+        /// Get books that are loaned
+        /// <param name = "userId"></param>
+        /// <returns type = "IEnumerable<BookDTO>"> </returns>
+        /// </summary>
         public IEnumerable<BookDTO> getBooksOnLoanByUser(int userId)
         {
             var date = Convert.ToDateTime(null);
@@ -387,6 +464,13 @@ namespace BookApi.Repositories
             return loans;
         }
 
+
+        /// <summary>
+        ///  Add book to user 
+        /// <param name = "bookId"></param>
+        /// <param name = "userId"></param>
+        /// <returns type = "bool"> </returns>
+        /// </summary>
         public bool addBookToUser(int bookId, int userId)
         {
             bool doesExist = false;
@@ -413,6 +497,13 @@ namespace BookApi.Repositories
             _db.SaveChanges();
             return true;
         }
+
+        /// <summary>
+        ///  Delets a book that user has loaned.
+        /// <param name = "bookId"></param>
+        /// <param name = "userId"></param>
+        /// <returns type = "bool"> </returns>
+        /// </summary>
         public bool deleteBookFromUser(int bookId, int userId)
         {
             bool doesExist = false;
@@ -438,6 +529,15 @@ namespace BookApi.Repositories
             _db.SaveChanges();
             return true;
         }
+
+
+        /// <summary>
+        ///  Edit book that user has loaned
+        /// <param name = "bookId"></param>
+        /// <param name = "userId"></param>
+        /// <param name = "loan"></param>
+        /// <returns type = "bool"> </returns>
+        /// </summary>
         public bool editBookUser(int bookId, int userId, UserLoan loan)
         {
             var toUpdate = (from ub in _db.UserBooks
@@ -474,7 +574,12 @@ namespace BookApi.Repositories
             }
         }
 
-        // User and book Reviews
+        /// <summary>
+        ///  Gets all reviews from userid that he has posed 
+        /// to any book.
+        /// <param name = "userId"></param>
+        /// <returns type = "IEnumerable<ReviewsDTO>"> </returns>
+        /// </summary>
         public IEnumerable<ReviewsDTO> getReviewsById(int userId)
         {
             var reviews = (from r in _db.Reviews join u in _db.Users on r.UserId equals u.Id
@@ -488,6 +593,13 @@ namespace BookApi.Repositories
                             }).ToList();
             return reviews;
         }
+
+        /// <summary>
+        ///  Gets a single review by bookId and userID
+        /// <param name = "bookId"></param>
+        /// <param name = "userId"></param>
+        /// <returns type = "ReviewsDTO"> </returns>
+        /// </summary>
         public ReviewsDTO getReviewById(int bookId, int userId)
         {
             var review = (from r in _db.Reviews join u in _db.Users on r.UserId equals u.Id
@@ -505,16 +617,11 @@ namespace BookApi.Repositories
             }
             return review;
         }
-        public void editReviewByIds(int bookId, int userId)
-        {
 
-        }
-        public void deleteReviewByIds(int bookId, int userId)
-        {
-
-        }
-
-        // BookReviews
+        /// <summary>
+        ///  Get all book reviews that exists in database.
+        /// <returns type = "IEnumerable<ReviewsDTO>"> </returns>
+        /// </summary>
         public IEnumerable<ReviewsDTO> getBookReview()
         {
             var ReviewExists = _db.Reviews.FirstOrDefault();
@@ -533,6 +640,12 @@ namespace BookApi.Repositories
                             };
             return Reviews;
         }
+
+        /// <summary>
+        ///  Get all book review that users have posed.
+        /// <param name = "bookId"></param>
+        /// <returns type = "IEnumerable<ReviewsDTO>"> </returns>
+        /// </summary>
         public IEnumerable<ReviewsDTO> getBookReviewById(int bookId)
         {
             var ReviewExists = (from r in _db.Reviews where r.BookId == bookId
@@ -552,6 +665,13 @@ namespace BookApi.Repositories
                             });
             return Reviews;
         }
+
+        /// <summary>
+        ///  Get a single book review that specific user has posted.
+        /// <param name = "bookId"></param>
+        /// <param name = "userId"></param>
+        /// <returns type = "ReviewsDTO"> </returns>
+        /// </summary>
         public ReviewsDTO getBookReviewFromUser(int bookId, int userId)
         {
             var IfReviewExists = (from r in _db.Reviews where r.BookId == bookId 
@@ -572,6 +692,14 @@ namespace BookApi.Repositories
                          }).SingleOrDefault();
             return Review;
         }
+
+        /// <summary>
+        ///  Post a single review to book from user.
+        /// <param name = "bookId"></param>
+        /// <param name = "userId"></param>
+        /// <param name = "review"></param>
+        /// <returns type = "ReviewsDTO"> </returns>
+        /// </summary>
         public ReviewsDTO addBookReviewFromUser(int bookId, int userId, ReviewViewModel review)
         {
            var IfReviewExists = (from r in _db.Reviews where r.BookId == bookId 
@@ -601,6 +729,15 @@ namespace BookApi.Repositories
             return returnReview;
 
         }
+
+        
+        /// <summary>
+        ///  Edit single review from specific user and book.
+        /// <param name = "bookId"></param>
+        /// <param name = "userId"></param>
+        /// <param name = "review"></param>
+        /// <returns type = "ReviewsDTO"> </returns>
+        /// </summary>
         public ReviewsDTO editBookReviewFromUser(int bookId, int userId, ReviewViewModel review)
         {
            var IfReviewExists = (from r in _db.Reviews where r.BookId == bookId 
@@ -622,6 +759,13 @@ namespace BookApi.Repositories
             return returnReview;
 
         }
+
+         /// <summary>
+        ///  Deletes a single review that exists on book from specific user..
+        /// <param name = "bookId"></param>
+        /// <param name = "userId"></param>
+        /// <returns type = "ReviewsDTO"> </returns>
+        /// </summary>
         public ReviewsDTO deleteReviewFromUser(int bookID, int userId)
         {
             var IfReviewExists = (from r in _db.Reviews where r.BookId == bookID 
@@ -637,6 +781,12 @@ namespace BookApi.Repositories
                 Review = IfReviewExists.UserReview
             };
         }
+
+        /// <summary>
+        ///  Get single book by Id (Helper function)
+        /// <param name = "Id"></param>
+        /// <returns type = "BookDTO"> </returns>
+        /// </summary>
         public BookDTO getSingleBookById(int Id)
         {
             var book = (from b in _db.Books 
@@ -653,6 +803,10 @@ namespace BookApi.Repositories
             return book;
         }
 
+        /// <summary>
+        ///  Get book count from database (Helper function)
+        /// <returns type = "int"> </returns>
+        /// </summary>
         public int getBookCount()
         {
             var bookListCount = (from b in _db.Books
@@ -661,6 +815,12 @@ namespace BookApi.Repositories
             return bookListCount;
         }
 
+        /// <summary>
+        ///  get book that user has loaned (Helper function)
+        /// <param name = "bookId"></param>
+        /// <param name = "userId"></param>
+        /// <returns type = "int"> </returns>
+        /// </summary>
         public UserLoan getBookUser(int bookId, int userId)
         {
             var loan = (from ub in _db.UserBooks
