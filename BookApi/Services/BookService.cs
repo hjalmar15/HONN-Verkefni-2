@@ -23,33 +23,42 @@ namespace BookApi.Services
         {
             _repo = repo;
         }
-        // Books 
+                                
+        /// <summary>
+        /// Gets all books from repo with loanDate and loanDuration if specified
+        /// </summary>
         public IEnumerable<BookDTO> getBooks(DateTime? loanDate, int? loanDuration)
         {
-            var books = _repo.getBooks(loanDate, loanDuration);
-
-            return books;
+            return _repo.getBooks(loanDate, loanDuration);
         }
+        
+        /// <summary>
+        /// Calls the repo to add a new book
+        /// </summary>
         public BookDTO addBook(NewBook book)
         {
-            var bookCreated = _repo.addBook(book);
-
-            return bookCreated;
+            return _repo.addBook(book);
         }
+                
+        /// <summary>
+        /// Gets a specific book from repo
+        /// </summary>
         public BookAndLoansDTO getBookById(int Id)
         {
-            var book = _repo.getBookById(Id);
-
-            return book;
+            return _repo.getBookById(Id);
         }
-
+                
+        /// <summary>
+        /// Calls the repo to delete a book
+        /// </summary>
         public BookDTO deleteBook(int bookId)
         {
-            var success = _repo.deleteBook(bookId);
-
-            return success;
+            return _repo.deleteBook(bookId);
         }
 
+        /// <summary>
+        /// Calls the repo to edit a book
+        /// </summary>
         public BookDTO editBook(int bookId, NewBook book)
         {
             var exists = _repo.getBookById(bookId);
@@ -58,45 +67,55 @@ namespace BookApi.Services
             {
                 return null; 
             }
-            var result = _repo.editBook(bookId, book);
-            return result;
+            return _repo.editBook(bookId, book);
         }
         
-        // Book To User
+        /// <summary>
+        /// Gets all books on loan for a specific user
+        /// </summary>
         public IEnumerable<BookDTO> getBooksOnLoanByUser(int userId)
         {
-            var loans = _repo.getBooksOnLoanByUser(userId);
-
-            return loans;
+            return _repo.getBooksOnLoanByUser(userId);
         }
 
-
-
+        /// <summary>
+        /// Calls repo to add a book to loan for a user
+        /// </summary>
         public bool addBookToUser(int bookId, int userId)
         {
            return _repo.addBookToUser(bookId, userId);
         }
+        
+        /// <summary>
+        /// Calls repo to delete a book on loan for a user (Return a book)
+        /// </summary>
         public bool deleteBookFromUser(int bookId, int userId)
         {
             return _repo.deleteBookFromUser(bookId, userId);
         }
+        
+        /// <summary>
+        /// Calls repo to edit a book on loan for a user
+        /// </summary>
         public bool editBookUser(int bookId, int userId, UserLoan loan)
         {
-            bool success = _repo.editBookUser(bookId, userId, loan);
-
-            return success;
+            return _repo.editBookUser(bookId, userId, loan);
         }
 
+        /// <summary>
+        /// Gets a single book by ID
+        /// </summary>
         public BookDTO getSingleBookById(int Id)
         {
-            var book = _repo.getSingleBookById(Id);
- 
-            return book;
+            return _repo.getSingleBookById(Id);
         }
+
+        /// <summary>
+        /// Gets a specific book loan for a specific user
+        /// </summary>
         public UserLoan getBookUser(int bookId, int userId)
         {
-            var loan = _repo.getBookUser(bookId, userId);
-            return loan;
+            return _repo.getBookUser(bookId, userId);
         }
 
     }
