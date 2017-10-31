@@ -19,6 +19,9 @@ namespace BookApi.Tests
         private IEnumerable<BookDTO> _Books;
         private BookDTO _bookDTO;
         
+        ///<summary>
+        /// Initilizes the list and sets the MockRepo
+        ///</summary>
         [TestInitialize]
         public void BookTestSetup()
         {
@@ -52,6 +55,9 @@ namespace BookApi.Tests
             _mockRepo = new Mock<IRepositoryService>();
         }
 
+        ///<summary>
+        /// Gets all books
+        ///</summary>
         [TestMethod]
         public void getBooks()
         {
@@ -63,6 +69,10 @@ namespace BookApi.Tests
             bookCount.Should().HaveCount(3);  
 
         }
+        
+        ///<summary>
+        /// Posts a book to the list
+        ///</summary>
         [TestMethod]
         public void addBook()
         {
@@ -88,6 +98,10 @@ namespace BookApi.Tests
 
             
         }
+        
+        ///<summary>
+        /// Gets book by its ID
+        ///</summary>
         [TestMethod]
         public void getBookById()
         {
@@ -120,6 +134,10 @@ namespace BookApi.Tests
 
             
         }
+        
+        ///<summary>
+        /// Deletes a book from the list
+        ///</summary>
         [TestMethod]
         public void deleteBook()
         {
@@ -131,6 +149,10 @@ namespace BookApi.Tests
             bookCount.Author.Should().BeEquivalentTo("Jon Jonsson");
             bookCount.Should().NotBeNull();
         }
+
+        ///<summary>
+        /// Edits a book from the list
+        ///</summary>
         [TestMethod]
         public void editBook()
         {
@@ -148,6 +170,10 @@ namespace BookApi.Tests
             bookCount.Should().BeNull();
 
         }
+        
+        ///<summary>
+        /// Adds a book to a user
+        ///</summary>
         [TestMethod]
         public void addBookToUser()
         {
@@ -157,6 +183,10 @@ namespace BookApi.Tests
     
 
         }
+
+        ///<summary>
+        /// Deletes a book from User (User returns the book)
+        ///</summary>
         [TestMethod]
         public void deleteBookFromUser()
         {
@@ -165,6 +195,10 @@ namespace BookApi.Tests
             bookServices.Should().NotBeNull();
 
         }
+        
+        ///<summary>
+        /// Edits the dates of when the user got the book and returned it
+        ///</summary>
         [TestMethod]
         public void editBookUser()
         {
@@ -177,6 +211,10 @@ namespace BookApi.Tests
             bookServices.Should().NotBeNull(); 
 
         }
+
+        ///<summary>
+        /// Gets a loan from book that is loaned from a user
+        ///</summary>
         [TestMethod]
         public void getBookUser()
         {
@@ -191,6 +229,10 @@ namespace BookApi.Tests
             bookCount.LoanDate.Should().BeEquivalentTo("03/01/2016");
             bookCount.ReturnedDate.Should().BeEquivalentTo("05/02/2017");
         }
+        
+        ///<summary>
+        /// Gets a single book by its ID
+        ///</summary>
         [TestMethod]
         public void getSingleBookById()
         {

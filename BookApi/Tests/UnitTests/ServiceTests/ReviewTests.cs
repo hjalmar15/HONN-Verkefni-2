@@ -18,6 +18,9 @@ namespace BookApi.Tests
         private IEnumerable<ReviewsDTO> _Reviews;
         private Mock<IRepositoryService> _mockRepo;
 
+        ///<summary>
+        /// Initilizes the list and sets the mockRepo
+        ///</summary>
         [TestInitialize]
         public void ReviewTestsSetup()
         {
@@ -45,6 +48,10 @@ namespace BookApi.Tests
              _Reviews = _ReviewsDTO as IEnumerable<ReviewsDTO>;
              _mockRepo = new Mock<IRepositoryService>();
         }
+
+        ///<summary>
+        /// Gets a book review
+        ///</summary>
         [TestMethod]
         public void getBookReview()
         {
@@ -56,6 +63,10 @@ namespace BookApi.Tests
 
             
         }
+
+        ///<summary>
+        /// Gets a book review from a ID
+        ///</summary>
         [TestMethod]
         public void getBookReviewById()
         {
@@ -65,6 +76,11 @@ namespace BookApi.Tests
             ReviewServices.Should().NotBeNull();
             reviewscount.Should().HaveCount(3);
         }
+
+        
+        ///<summary>
+        /// Gets all book reviews from a specific user and book
+        ///</summary>
         [TestMethod]
         public void getBookReviewFromUser()
         {
@@ -84,6 +100,9 @@ namespace BookApi.Tests
         
         }
         
+        ///<summary>
+        /// Posts a review from a user to a book
+        ///</summary>
         [TestMethod]
         public void postBookReviewFromUser()
         {
@@ -106,6 +125,9 @@ namespace BookApi.Tests
        
         }
 
+        ///<summary>
+        /// Edits a book review from user
+        ///</summary>
         [TestMethod]
         public void editBookReviewFromUser()
         {
@@ -127,6 +149,10 @@ namespace BookApi.Tests
             ReviewServices.Should().NotBeNull();
        
         }
+        
+        ///<summary>
+        /// Deletes a review on a book from a user
+        ///</summary>
         [TestMethod]
         public void deleteReviewFromUser()
         {
@@ -143,6 +169,11 @@ namespace BookApi.Tests
             reviewscount.Stars.Should().BeLessOrEqualTo(3);
             ReviewServices.Should().NotBeNull();
         }
+
+        
+        ///<summary>
+        /// Gets a review from userID
+        ///</summary>
         [TestMethod]
         public void getReviewsById()
         {
@@ -152,6 +183,11 @@ namespace BookApi.Tests
             ReviewServices.Should().NotBeNull();
             reviewscount.Should().HaveCount(3);
         }
+
+        
+        ///<summary>
+        /// Gets a review from a user on a specific book
+        ///</summary>
         [TestMethod]
         public void getReviewById()
         {

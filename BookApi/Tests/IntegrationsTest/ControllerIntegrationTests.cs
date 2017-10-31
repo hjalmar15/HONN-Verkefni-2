@@ -82,6 +82,31 @@ namespace BookApi.Tests
 
 
         /// <summary>
+        /// Get test of books that has had book loaned more than 30 days
+        /// path: /api/v1/books?LoanDate=2017-10-10&LoanDuration=30
+        /// method: GET
+        /// </summary>
+        [TestMethod]
+        public void getBooksByLoanDateAndLoanDuration()
+        {
+            List<BookDTO> books = null;
+            var response = client.GetAsync("/api/v1/books?LoanDate=2017-10-10&LoanDuration=30")
+            .ContinueWith((taskResponse) =>
+            {
+                var res = taskResponse.Result;
+                var stringur = res.Content.ReadAsStringAsync();
+                stringur.Wait();
+                books = JsonConvert.DeserializeObject<List<BookDTO>>(stringur.Result);
+
+            });
+            response.Wait();
+            Assert.IsNotNull(books);
+            Assert.AreEqual(books.Count, 36);
+            Assert.AreEqual(books[0].Title, "Integrated impactful internet solution");
+        }
+       
+       
+         /// <summary>
         /// Posts a single book tests 
         /// path: /api/v1/books
         /// method: POST
@@ -377,6 +402,25 @@ namespace BookApi.Tests
         /// path: /api/v1/users/{user_id}
         /// method: GET
         /// </summary>
+        [TestMethod]
+        public void getUsersByLoanDateAndLoanDuration()
+        {
+            List<CreatedUser> users = null;
+            var response = client.GetAsync("/api/v1/users?LoanDate=2017-10-10&LoanDuration=30")
+            .ContinueWith((taskResponse) =>
+            {
+                var res = taskResponse.Result;
+                var stringur = res.Content.ReadAsStringAsync();
+                stringur.Wait();
+                users = JsonConvert.DeserializeObject<List<CreatedUser>>(stringur.Result);
+                Assert.AreEqual(res.ReasonPhrase, "OK");
+            });
+            response.Wait();
+            Assert.IsTrue(response.IsCompletedSuccessfully);
+            Assert.IsNotNull(users);
+            Assert.AreEqual(users.Count, 36);
+            Assert.AreEqual(users[0].Name, "Pierette Klawi");
+        }
         [TestMethod]
         public void getUserById()
         {

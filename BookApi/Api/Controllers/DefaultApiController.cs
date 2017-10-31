@@ -9,6 +9,7 @@ using BookApi.Services;
 using Newtonsoft.Json;
 using BookApi.Models.DTOModels;
 using BookApi.Models.ViewModels;
+using System.Globalization;
 
 namespace BookApi.Api.Controllers
 { 
@@ -57,8 +58,8 @@ namespace BookApi.Api.Controllers
             DateTime LoanDate;
             int LoanDuration;
             if(loanDate != null)
-            {
-                LoanDate = Convert.ToDateTime(loanDate);
+            {   
+                DateTime.TryParse(loanDate, out LoanDate);
                 if(loanDuration != null)
                 {
                     LoanDuration = Int32.Parse(loanDuration);
@@ -212,7 +213,7 @@ namespace BookApi.Api.Controllers
             int LoanDuration;
             if(loanDate != null)if(loanDate != null)
             {
-                LoanDate = Convert.ToDateTime(loanDate);
+                DateTime.TryParse(loanDate, out LoanDate);
                 if(loanDuration != null)
                 {
                     LoanDuration = Int32.Parse(loanDuration);
