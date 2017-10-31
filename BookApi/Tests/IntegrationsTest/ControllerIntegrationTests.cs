@@ -949,7 +949,7 @@ namespace BookApi.Tests
         [TestMethod]
         public async Task PutReviewToBookFromUser()
         {
-            ReviewsDTO RetReview = null;
+        ReviewsDTO RetReview = null;
             ReviewViewModel PostRev = new ReviewViewModel{
                 Stars = 5,
                 UserReview = "this book was great"
@@ -969,6 +969,17 @@ namespace BookApi.Tests
 
             var PutRes = await client.PutAsync("/api/v1/users/50/reviews/500", stringContent2);
 
+            var review = client.GetAsync("/api/v1/users/50/reviews/500")
+            .ContinueWith((taskResponse) =>
+            {
+                var res = taskResponse.Result;
+                var ret = res.Content.ReadAsStringAsync();
+                ret.Wait();
+                RetReview = JsonConvert.DeserializeObject<ReviewsDTO>(ret.Result);
+            });
+            review.Wait();
+            Assert.AreEqual(PutReview.Stars, RetReview.Stars);
+            Assert.AreEqual(PutReview.UserReview, RetReview.Review);
             var delete = await client.DeleteAsync("/api/v1/users/50/reviews/500");
             Assert.IsTrue(delete.IsSuccessStatusCode);
             Assert.IsTrue(PostRes.IsSuccessStatusCode);
