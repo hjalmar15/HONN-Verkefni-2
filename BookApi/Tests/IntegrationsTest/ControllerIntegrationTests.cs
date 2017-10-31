@@ -27,8 +27,6 @@ namespace BookApi.Tests
     {
         #region Setup
         public HttpClient client;
-
-        AppDataContext _ctx;
         private TestServer _server;
 
         [TestInitialize]
@@ -941,7 +939,7 @@ namespace BookApi.Tests
             Assert.AreEqual(review.Review, "Did not enjoy this book.");
         }
         [TestMethod]
-        public async Task postReviewToBookFromUser()
+        public void postReviewToBookFromUser()
         {
             ReviewsDTO RetReview = null;
             ReviewViewModel PostRev = new ReviewViewModel{
@@ -971,7 +969,7 @@ namespace BookApi.Tests
             Assert.AreEqual(PostRev.UserReview, RetReview.Review);
         }
         [TestMethod]
-        public async Task DeleteReviewToBookFromUser()
+        public void DeleteReviewToBookFromUser()
         {
             ReviewsDTO RetReview = null;
             ReviewViewModel PostRev = new ReviewViewModel{
@@ -1003,7 +1001,6 @@ namespace BookApi.Tests
         [TestMethod]
         public async Task PutReviewToBookFromUser()
         {
-            ReviewsDTO RetReview = null;
             ReviewViewModel PostRev = new ReviewViewModel{
                 Stars = 5,
                 UserReview = "this book was great"
@@ -1097,7 +1094,6 @@ namespace BookApi.Tests
         [TestMethod]
         public async Task EditReviewByBookAndId()
         {
-            ReviewsDTO RetReview = null;
             ReviewViewModel PostRev = new ReviewViewModel{
                 Stars = 5,
                 UserReview = "this book was great"
@@ -1126,7 +1122,6 @@ namespace BookApi.Tests
         [TestMethod]
         public async Task DeleteReviewByBook()
         {
-            ReviewsDTO RetReview = null;
             ReviewViewModel PostRev = new ReviewViewModel{
                 Stars = 5,
                 UserReview = "this book was great"
