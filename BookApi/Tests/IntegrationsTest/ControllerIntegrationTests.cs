@@ -1188,6 +1188,53 @@ namespace BookApi.Tests
         //Delete a review that doesn't exist
 
         [TestMethod]
+        public async Task DeleteBookReviewThatDoesNotExists()
+        {
+        
+            ReviewViewModel PostRev = new ReviewViewModel{
+                Stars = 5,
+                UserReview = "this book was great"
+            };
+            int book_id = -1;
+            int user_id = -1;
+            var stringContent1 = new StringContent(JsonConvert
+            .SerializeObject(PostRev), Encoding.UTF8, "application/json");
+
+            var delete = await client.DeleteAsync($"/api/v1/books/{book_id}/reviews/{user_id}");
+            Assert.IsFalse(delete.IsSuccessStatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task putReviewWithNoStarsFailingBooks()
+        {
+            ReviewViewModel PostRev = new ReviewViewModel{
+                Stars = 5,
+                UserReview = "this book was great"
+            };
+            ReviewViewModel PutReview = new ReviewViewModel{
+            };
+            int user_id = 50;
+            int book_id = 500;
+            var stringContent1 = new StringContent(JsonConvert
+            .SerializeObject(PostRev), Encoding.UTF8, "application/json");
+
+            var  stringContent2 = new StringContent(JsonConvert
+            .SerializeObject(PutReview), Encoding.UTF8, "application/json");
+
+            var PostRes = await client.PostAsync($"/api/v1/users/{user_id}/reviews/{book_id}", stringContent1);
+
+            var PutRes = await client.PutAsync($"/api/v1/books/{book_id}/reviews/{user_id}", stringContent2);
+
+            var delete = await client.DeleteAsync($"/api/v1/users/{user_id}/reviews/{book_id}");
+            Assert.IsTrue(delete.IsSuccessStatusCode);
+            Assert.IsTrue(PostRes.IsSuccessStatusCode);
+            Assert.IsFalse(PutRes.IsSuccessStatusCode);
+            
+
+        }
+
+        [TestMethod]
         public async Task DeleteReviewThatDoesNotExists()
         {
             ReviewsDTO RetReview = null;
