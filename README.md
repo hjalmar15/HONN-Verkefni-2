@@ -1,6 +1,22 @@
 # HONN-Verkefni-2
 
+By 
+* Arnar Jóhannsson
+* Hjálmar Diego Arnórsson
+* Jón Heiðar Sigmundsson
+
 [![Build Status](https://travis-ci.org/hjalmar15/HONN-Verkefni-2.svg?branch=master)](https://travis-ci.org/hjalmar15/HONN-Verkefni-2)
+
+
+## How to run
+
+
+
+
+
+
+
+## URIs and example method calls
 
 | URI                                | HTTP Method | Útskýring                                          | Example Method call                                                                                                                                                                                                   | Example JSON body                                                                                                                                                                     |
 |------------------------------------|-------------|----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -29,3 +45,5 @@
 | /books/{book_id}/reviews/{user_id} | GET         | Fá dóm frá notanda fyrir bók                       | http://localhost:5000/api/v1/books/100/reviews/10                                                                                                                                                                     |                                                                                                                                                                                       |
 | /books/{book_id}/reviews/{user_id} | PUT         | Breyta dómi notanda um bók                         | http://localhost:5000/api/v1/books/100/reviews/10                                                                                                                                                                     | {<br>         "stars": 3,<br>         "userReview": "Not   such a good book"     <br>}                                                                                                            |
 | /books/{book_id}/reviews/{user_id} | DELETE      | Eyða dómi notanda um bók                           | http://localhost:5000/api/v1/books/100/reviews/10                                                                                                                                                                     |                                                                                                                                                                                       |
+
+
