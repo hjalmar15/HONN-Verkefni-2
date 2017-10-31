@@ -1,1 +1,8 @@
 language: csharp
+
+install:
+- dotnet restore
+
+script:
+- dotnet build
+- dotnet test BookApi.Tests/Tests.csproj
