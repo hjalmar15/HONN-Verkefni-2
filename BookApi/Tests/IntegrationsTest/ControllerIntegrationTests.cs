@@ -28,6 +28,15 @@ namespace BookApi.Tests
         public HttpClient client;
         private TestServer _server;
 
+
+
+        /// <summary>
+        /// Initialize tests for integrations 
+        /// Where it tests end-to-end tests
+        /// We are using testDatabase so we startup
+        /// the program with testStartup instead of normal
+        /// startup.
+        /// </summary>        
         [TestInitialize]
         public void ControllerSetup()
         {
@@ -43,6 +52,15 @@ namespace BookApi.Tests
 
         #region HappyPathsBooks
         //GET on /books DONE
+
+
+
+        /// <summary>
+        /// Get All boos tests 
+        /// path: /api/v1/books
+        /// method: GET
+        /// returns all boosk in database;
+        /// </summary>
         [TestMethod]
         public void getBooks()
         {
@@ -62,7 +80,13 @@ namespace BookApi.Tests
             Assert.AreEqual(books[0].Title, "Compatible clear-thinking neural-net");
         }
 
-        //POST on /books DONE
+
+        /// <summary>
+        /// Posts a single book tests 
+        /// path: /api/v1/books
+        /// method: POST
+        /// returns book that was created
+        /// </summary>
         [TestMethod]
         public void createBook()
         {
@@ -105,6 +129,13 @@ namespace BookApi.Tests
             Assert.AreEqual(createdBook.ISBN, book.ISBN);
         }
 
+
+
+        /// <summary>
+        /// Gets a single book by Id
+        /// path: /api/v1/books/"
+        /// method: GET
+        /// </summary>
         //GET on /books/{book_id} DONE
         [TestMethod]
         public void getBookById()
@@ -132,6 +163,11 @@ namespace BookApi.Tests
             Assert.IsNotNull(book.LoanHistory);
         }
 
+        /// <summary>
+        /// Deletes a single book by Id
+        /// path: /api/v1/books/"
+        /// method: DELETE
+        /// </summary>
         //DELETE on /books/{book_id} DONE
         [TestMethod]
         public void deleteBookById()
@@ -204,6 +240,12 @@ namespace BookApi.Tests
             Assert.IsNull(bookShouldBeNull);
         }
 
+
+        /// <summary>
+        /// Changes a book by Id
+        /// path: /api/v1/books/"
+        /// method: PUT
+        /// </summary>
         //PUT on /books/{book_id} DONE
         [TestMethod]
         public void changeBookById()
@@ -303,6 +345,12 @@ namespace BookApi.Tests
         #region Users
 
         #region HappyPathsUsers
+        
+        /// <summary>
+        /// Get all users from database
+        /// path: /api/v1/users
+        /// method: GET
+        /// </summary>
         [TestMethod]
         public void getUsers()
         {
@@ -323,11 +371,18 @@ namespace BookApi.Tests
             Assert.AreEqual(users[0].Name, "Nelli Riglesford");
         }
 
+
+        /// <summary>
+        /// Gets a user by id from database
+        /// path: /api/v1/users/{user_id}
+        /// method: GET
+        /// </summary>
         [TestMethod]
         public void getUserById()
         {
+            int user_id = 1;
             CreatedUser user = null;
-            var response = client.GetAsync("/api/v1/users/1")
+            var response = client.GetAsync($"/api/v1/users/{user_id}")
             .ContinueWith((taskResponse) =>
             {
                 var res = taskResponse.Result;
@@ -378,6 +433,12 @@ namespace BookApi.Tests
             Assert.AreEqual(retUser.PhoneNumber, user.PhoneNumber);
         }
 
+
+        /// <summary>
+        /// Edit a user 
+        /// path: /api/v1/users/{user_id}
+        /// method: PUT
+        /// </summary>
         [TestMethod]
         public void putAUser()
         {
@@ -436,6 +497,12 @@ namespace BookApi.Tests
             Assert.AreEqual(retUserBack.PhoneNumber, originalUser.PhoneNumber);
         }
 
+
+        /// <summary>
+        /// Deletes a user by Id
+        /// path: /api/v1/users/{user_id}
+        /// method: DELETE
+        /// </summary>
         [TestMethod]
         public void deleteAUser()
         {
@@ -500,6 +567,12 @@ namespace BookApi.Tests
 
         #region FailingPathsUsers
         
+
+        /// <summary>
+        /// Fail test tries to add user with no Name
+        /// path: /api/v1/users
+        /// method: POST
+        /// </summary>
         [TestMethod]
         public void addUserWithNoName()
         {
@@ -534,7 +607,14 @@ namespace BookApi.Tests
 		#region Users -> Books    
 
         #region HappyPathsUsersBooks
-        //GET on /users/{user_id}/books DONE
+        
+        
+        
+        /// <summary>
+        /// Get a Books that are loaned by userId
+        /// path: /api/v1/users/{user_id}/books/
+        /// method: GET
+        /// </summary>
         [TestMethod]
         public void GetBooksOnLoanByUserId()
         {
@@ -555,7 +635,15 @@ namespace BookApi.Tests
             Assert.AreEqual(booksOnLoan.Count, 3);
         }
 
-        //Post on /users/{user_id}/books/{book_id} DONE
+
+
+
+
+        /// <summary>
+        /// Add book that is loaned by User
+        /// path: /api/v1/users/{user_id}/books/{book_id}
+        /// method: POST
+        /// </summary>
         [TestMethod]
         public async Task AddBookOnLoanByUser()
         {
@@ -613,6 +701,13 @@ namespace BookApi.Tests
         }
 
         //DELETE on /users/{user_id}/books/{book_id} DONE
+
+
+        /// <summary>
+        /// Removes a Book that is loaned by user by userId
+        /// path: /api/v1/users/{user_id}/books/
+        /// method: POST
+        /// </summary>
         [TestMethod]
         public async Task DeleteBookOnLoanByUser()
         {
@@ -671,7 +766,11 @@ namespace BookApi.Tests
             Assert.AreEqual(booksAfterDeleteOnLoan.Count, nrOfBooksOnLoan - 1);
         }
 
-        //PUT on /users/{user_id}/books/{book_id} NOT DONE!!!
+        /// <summary>
+        /// edits a Book that is loaned by user by userId
+        /// path: /api/v1/users/{user_id}/books/{book_id}
+        /// method: PUT
+        /// </summary>
         [TestMethod]
         public async Task EditBookOnLoanByUser()
         {
@@ -771,7 +870,12 @@ namespace BookApi.Tests
 
         #region FailingPathsUsersBooks
         
-        //Post a book on loan where user already has book on loan
+
+        /// <summary>
+        /// Fail test if book is already loaned
+        /// path: /api/v1/users/{user_id}/books/{book_id}
+        /// method: PUT
+        /// </summary>
         [TestMethod]
         public void AddBookAgainOnLoanByUser()
         {
@@ -832,7 +936,13 @@ namespace BookApi.Tests
             });
             deleteResponse.Wait();
         }
-        //Put a book on loan with returndate in the past and try to delete
+
+        /// <summary>
+        /// Fail test if book is already passed loandate 
+        /// and tries to delete.
+        /// path: /api/v1/users/{user_id}/books/{book_id}
+        /// method: PUT
+        /// </summary>
     	[TestMethod]
         public void DeleteBookOnLoanByUserWithReturnDateInPast()
         {
@@ -901,11 +1011,19 @@ namespace BookApi.Tests
 		#region Users -> Reviews    
 
         #region HappyPathUsersReviews
+
+
+        /// <summary>
+        /// Get all reviews from users
+        /// path: /api/v1/users/{user_id}/books/{book_id}
+        /// method: POST
+        /// </summary>
         [TestMethod]
         public void getAllReviewsForUser()
         {
+            int user_id = 90;
             List<ReviewsDTO> review = null;
-            var response = client.GetAsync("/api/v1/users/90/reviews")
+            var response = client.GetAsync($"/api/v1/users/{user_id}/reviews")
             .ContinueWith((taskResponse) =>
             {
                 var res = taskResponse.Result;
@@ -919,11 +1037,19 @@ namespace BookApi.Tests
             Assert.AreEqual(review.Count, 2);
         }
 
+
+        /// <summary>
+        /// Get review that user has posted
+        /// path: /api/v1/users/{user_id}/reviews/{book_id}
+        /// method: GET
+        /// </summary>
         [TestMethod]
         public void getReviewFromBook()
         {
+            int user_id = 90;
+            int book_id = 788;
             ReviewsDTO review = null;
-            var response = client.GetAsync("/api/v1/users/90/reviews/788")
+            var response = client.GetAsync($"/api/v1/users/{user_id}/reviews/{book_id}")
             .ContinueWith((taskResponse) =>
             {
                 var res = taskResponse.Result;
@@ -937,9 +1063,18 @@ namespace BookApi.Tests
             Assert.AreEqual(review.Stars, 2);
             Assert.AreEqual(review.Review, "Did not enjoy this book.");
         }
+
+
+        /// <summary>
+        /// Adds review to book from user
+        /// path: /api/v1/users/{user_id}/reviews/{book_id}
+        /// method: POST
+        /// </summary>
         [TestMethod]
         public void postReviewToBookFromUser()
         {
+            int user_id = 50;
+            int book_id = 50;
             ReviewsDTO RetReview = null;
             ReviewViewModel PostRev = new ReviewViewModel{
                 Stars = 5,
@@ -949,7 +1084,7 @@ namespace BookApi.Tests
             var stringContent1 = new StringContent(JsonConvert
             .SerializeObject(PostRev), Encoding.UTF8, "application/json");
 
-            var response = client.PostAsync("/api/v1/users/50/reviews/500", stringContent1)
+            var response = client.PostAsync($"/api/v1/users/{user_id}/reviews/{book_id}", stringContent1)
             .ContinueWith((taskResponse) =>
             {
                 var res = taskResponse.Result;
@@ -959,7 +1094,7 @@ namespace BookApi.Tests
             });
             response.Wait();
 
-            var delete = client.DeleteAsync("/api/v1/users/50/reviews/500");
+            var delete = client.DeleteAsync($"/api/v1/users/{user_id}/reviews/{book_id}");
             delete.Wait();
             Assert.IsTrue(delete.IsCompletedSuccessfully);
             Assert.IsTrue(response.IsCompletedSuccessfully);
@@ -967,9 +1102,17 @@ namespace BookApi.Tests
             Assert.AreEqual(PostRev.Stars, RetReview.Stars);
             Assert.AreEqual(PostRev.UserReview, RetReview.Review);
         }
+
+        /// <summary>
+        /// Removes a review from book that user has posed.
+        /// path: /api/v1/users/{user_id}/reviews/{book_id}
+        /// method: DELETE
+        /// </summary>
         [TestMethod]
         public void DeleteReviewToBookFromUser()
         {
+            int user_id = 50;
+            int book_id = 500;
             ReviewsDTO RetReview = null;
             ReviewViewModel PostRev = new ReviewViewModel{
                 Stars = 5,
@@ -979,7 +1122,7 @@ namespace BookApi.Tests
             var stringContent1 = new StringContent(JsonConvert
             .SerializeObject(PostRev), Encoding.UTF8, "application/json");
 
-            var response = client.PostAsync("/api/v1/users/50/reviews/500", stringContent1)
+            var response = client.PostAsync($"/api/v1/users/{user_id}/reviews/{book_id}", stringContent1)
             .ContinueWith((taskResponse) =>
             {
                 var res = taskResponse.Result;
@@ -989,7 +1132,7 @@ namespace BookApi.Tests
             });
             response.Wait();
 
-            var delete = client.DeleteAsync("/api/v1/users/50/reviews/500");
+            var delete = client.DeleteAsync($"/api/v1/users/{user_id}/reviews/{book_id}");
             delete.Wait();
             Assert.IsTrue(delete.IsCompletedSuccessfully);
             Assert.IsTrue(response.IsCompletedSuccessfully);
@@ -997,9 +1140,17 @@ namespace BookApi.Tests
             Assert.AreEqual(PostRev.Stars, RetReview.Stars);
             Assert.AreEqual(PostRev.UserReview, RetReview.Review);
         }
+
+        /// <summary>
+        /// Edit a review that for book that user has posted.
+        /// path: /api/v1/users/{user_id}/reviews/{book_id}
+        /// method: PUT
+        /// </summary>
         [TestMethod]
         public async Task PutReviewToBookFromUser()
         {
+            int user_id = 50;
+            int book_id = 500;
             ReviewViewModel PostRev = new ReviewViewModel{
                 Stars = 5,
                 UserReview = "this book was great"
@@ -1015,11 +1166,11 @@ namespace BookApi.Tests
             var  stringContent2 = new StringContent(JsonConvert
             .SerializeObject(PutReview), Encoding.UTF8, "application/json");
 
-            var PostRes = await client.PostAsync("/api/v1/users/50/reviews/500", stringContent1);
+            var PostRes = await client.PostAsync($"/api/v1/users/{user_id}/reviews/{book_id}", stringContent1);
 
-            var PutRes = await client.PutAsync("/api/v1/users/50/reviews/500", stringContent2);
+            var PutRes = await client.PutAsync($"/api/v1/users/{user_id}/reviews/{book_id}", stringContent2);
 
-            var delete = await client.DeleteAsync("/api/v1/users/50/reviews/500");
+            var delete = await client.DeleteAsync($"/api/v1/users/{user_id}/reviews/{book_id}");
             Assert.IsTrue(delete.IsSuccessStatusCode);
             Assert.IsTrue(PostRes.IsSuccessStatusCode);
             Assert.IsTrue(PutRes.IsSuccessStatusCode);
@@ -1031,6 +1182,12 @@ namespace BookApi.Tests
 
         //Delete a review that doesn't exist
 
+
+        /// <summary>
+        /// FailTest tries to remove review that does not exists.
+        /// path: /api/v1/users/{user_id}/reviews/{book_id}
+        /// method: DELETE
+        /// </summary>
         [TestMethod]
         public async Task DeleteReviewThatDoesNotExists()
         {
@@ -1049,6 +1206,12 @@ namespace BookApi.Tests
 
         //Put a review with no stars and userreview
 
+
+        /// <summary>
+        /// Fail test, tries to add review with no content
+        /// path: /api/v1/users/{user_id}/reviews/{book_id}
+        /// method: PUT
+        /// </summary>
         [TestMethod]
         public async Task putReviewWithNoStarsFailing()
         {
@@ -1084,7 +1247,12 @@ namespace BookApi.Tests
 		#region Users -> Recommendations    
 
         #region HappyPathUsersRecommendations
-        //GET on /users/{user_id}/recommendation NOT DONE
+
+        /// <summary>
+        /// Get recommended books for user
+        /// path: /api/v1/users/{user_id}/recommendation
+        /// method: GET
+        /// </summary>
         [TestMethod]
         public void GetBookRecommendationsForUser()
         {
@@ -1120,6 +1288,12 @@ namespace BookApi.Tests
 
         #region HappyPathBooksReviews
 
+
+        /// <summary>
+        /// Get a review for book and user that has written.
+        /// path: /api/v1/books/{book_id}/reviews/{user_id}
+        /// method: GET
+        /// </summary>
         [TestMethod]
         public void GetReviewByBookAndId()
         {
@@ -1138,6 +1312,12 @@ namespace BookApi.Tests
             Assert.IsNotNull(review);
             Assert.AreEqual(review.UserName, "Pierette Klawi");
         }
+
+        /// <summary>
+        /// Edits a review from book that user has written.
+        /// path: /api/v1/books/{book_id}/reviews/{user_id}
+        /// method: PUT
+        /// </summary>
         [TestMethod]
         public async Task EditReviewByBookAndId()
         {
@@ -1169,6 +1349,12 @@ namespace BookApi.Tests
             Assert.IsTrue(PutRes.IsSuccessStatusCode);
 
         }
+
+        /// <summary>
+        /// Deletes a Review from book that user has written.
+        /// path: /api/v1/users/{user_id}/reviews/{book_id}
+        /// method: PUT
+        /// </summary>
         [TestMethod]
         public async Task DeleteReviewByBook()
         {
@@ -1188,6 +1374,11 @@ namespace BookApi.Tests
             Assert.IsTrue(PostRes.IsSuccessStatusCode);
         }
 
+        /// <summary>
+        /// Gets all reviews from database.
+        /// path: /api/v1/books/reviews
+        /// method: GET
+        /// </summary>
         [TestMethod]
         public void getAllReviews()
         {
@@ -1208,7 +1399,12 @@ namespace BookApi.Tests
             Assert.AreEqual(review.Count, 10);
             
         }
-
+        
+        /// <summary>
+        /// Gets all reviews from specific book in database.
+        /// path: /api/v1/books/{book_id}/reviews
+        /// method: GET
+        /// </summary>
         [TestMethod]
         public void getAllReviewsForBook()
         {
@@ -1231,8 +1427,12 @@ namespace BookApi.Tests
 
         #region FailingPathBooksReviews
 
-        //Delete a review that doesn't exist
-
+        /// <summary>
+        /// Fail Test that tries to delete review that does
+        /// not exist.
+        /// path: /api/v1/books/{book_id}/reviews/{user_id}
+        /// method: DELETE
+        /// </summary>
         [TestMethod]
         public async Task DeleteBookReviewThatDoesNotExists()
         {
@@ -1251,6 +1451,14 @@ namespace BookApi.Tests
 
         }
 
+
+        /// <summary>
+        /// Fail Test that tries to edit review with no 
+        /// stars or review.
+        /// not exist.
+        /// path: /api/v1/books/{book_id}/reviews/{user_id}
+        /// method: PUT
+        /// </summary>
         [TestMethod]
         public async Task putReviewWithNoStarsFailingBooks()
         {
@@ -1276,11 +1484,8 @@ namespace BookApi.Tests
             Assert.IsTrue(delete.IsSuccessStatusCode);
             Assert.IsTrue(PostRes.IsSuccessStatusCode);
             Assert.IsFalse(PutRes.IsSuccessStatusCode);
-            
-
+        
         }
-
-
         #endregion
 
 		#endregion
