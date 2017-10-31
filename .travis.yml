@@ -6,7 +6,7 @@ dotnet: 2.0.0
 
 script:
 - ls
-- cd ./Api
+- cd ./BookApi/Api
 - ls
 - dotnet restore
 - dotnet build

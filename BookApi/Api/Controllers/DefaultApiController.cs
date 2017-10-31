@@ -244,8 +244,16 @@ namespace BookApi.Api.Controllers
         [Route("/api/v1/users")]
         public virtual IActionResult UsersPost([FromBody]CreateUser user)
         { 
-            var retUser = _UserService.addUser(user);
-            return CreatedAtRoute("created", new { user_id = retUser.Id }, retUser);
+            if(ModelState.IsValid)
+            {
+                var retUser = _UserService.addUser(user);
+                return CreatedAtRoute("created", new { user_id = retUser.Id }, retUser);
+            }
+            else
+            {
+                return BadRequest("User must have a name");
+            }
+            
         }
 
 

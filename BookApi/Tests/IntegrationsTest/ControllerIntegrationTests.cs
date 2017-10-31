@@ -25,7 +25,7 @@ namespace BookApi.Tests
     [TestClass]
     public class ControllerIntegrationTests
     {
-        
+        #region Setup
         public HttpClient client;
 
         AppDataContext _ctx;
@@ -40,8 +40,11 @@ namespace BookApi.Tests
 
         }
 		
+        #endregion
+
 		#region Books
 
+        #region HappyPathsBooks
         //GET on /books DONE
         [TestMethod]
         public void getBooks()
@@ -288,10 +291,17 @@ namespace BookApi.Tests
             Assert.AreEqual(bookShouldBeEdited.ISBN, editedBook.ISBN);
         }
 
+        #endregion
+
+        #region FailingPathsBooks
+
+        #endregion
+
 		#endregion
 
         #region Users
 
+        #region HappyPathsUsers
         [TestMethod]
         public void getUsers()
         {
@@ -487,8 +497,42 @@ namespace BookApi.Tests
 
         #endregion
 
+        #region FailingPathsUsers
+        
+        [TestMethod]
+        public void addUserWithNoName()
+        {
+            CreateUser user = new CreateUser{
+                Name = "",
+                Address = "Testergötu 1",
+                Email = "test@test.is",
+                PhoneNumber = "5812345"
+            };
+            var stringContent = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+
+            string message = "";
+            //Act
+            var response = client.PostAsync("/api/v1/users", stringContent)
+            .ContinueWith((taskResponse) =>
+            {
+                var res = taskResponse.Result;
+                var stringur = res.Content.ReadAsStringAsync();
+                stringur.Wait();
+                message = stringur.Result;
+            });
+
+            response.Wait();
+            Assert.IsTrue(response.IsCompletedSuccessfully);
+            Assert.AreEqual(message, "User must have a name");
+        }
+
+        #endregion
+
+        #endregion
+
 		#region Users -> Books    
 
+        #region HappyPathsUsersBooks
         //GET on /users/{user_id}/books DONE
         [TestMethod]
         public void GetBooksOnLoanByUserId()
@@ -507,7 +551,7 @@ namespace BookApi.Tests
             response.Wait();
 
             Assert.IsNotNull(booksOnLoan);
-            Assert.AreEqual(booksOnLoan.Count, 3);
+            Assert.AreEqual(booksOnLoan.Count, 4);
         }
 
         //Post on /users/{user_id}/books/{book_id} DONE
@@ -719,11 +763,23 @@ namespace BookApi.Tests
             deleteResponse.Wait();
         }
 
-    
+        #endregion
+
+        #region FailingPathsUsersBooks
+        
+        //Book on loan where user already has book on loan
+
+        //Put a book on loan with returndate in the past and try to delete
+
+        //Post a book that doesn't exist
+
+        #endregion
+
 		#endregion
 
 		#region Users -> Reviews    
 
+        #region HappyPathUsersReviews
         [TestMethod]
         public void getAllReviewsForUser()
         {
@@ -848,12 +904,28 @@ namespace BookApi.Tests
             Assert.IsTrue(PostRes.IsSuccessStatusCode);
             Assert.IsTrue(PutRes.IsSuccessStatusCode);
         }
-		
+
+        #endregion
+
+        #region FailingPathsUsersReviews
+
+        //Post a review with no stars
+
+        //Post a review with no userreview
+
+        //Put a review that doesn't exist
+
+        //Get a review where user doesn't exist
+
+        //Delete a review that doesn't exist
+
+        #endregion
 
 		#endregion
 
 		#region Users -> Recommendations    
-		
+
+        #region HappyPathUsersRecommendations
         //GET on /users/{user_id}/recommendation NOT DONE
         [TestMethod]
         public void GetBookRecommendationsForUser()
@@ -875,11 +947,23 @@ namespace BookApi.Tests
             Assert.IsNotNull(recommendedBooks);
             Assert.AreEqual(recommendedBooks.Count, 5);
         }
+        
+        #endregion
+
+        #region FailingPathsUsersRecommendations
+
+        //Get recommendations for user that has read all books
+
+        //Get recommendations for user that doesn't exist
+
+        #endregion
 
 		#endregion
 
 		#region Books -> Reviews    
-		
+
+        #region HappyPathBooksReviews
+
         [TestMethod]
         public void GetReviewByBookAndId()
         {
@@ -981,7 +1065,21 @@ namespace BookApi.Tests
             Assert.IsNotNull(review);
             Assert.AreEqual(review.Count, 2);
         }
+        #endregion
 
+        #region FailingPathBooksReviews
+
+        //Get reviews for a book that doesn't exist
+
+        //Get a review for a user that doesn't exist
+
+        //Put a review for a user that doesn't have a review on that book
+
+        //Delete a review that doesn't exist
+
+        //Put a review with no stars and userreview
+
+        #endregion
 
 		#endregion
     }

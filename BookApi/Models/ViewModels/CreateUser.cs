@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using BookApi.Models.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookApi.Models.ViewModels
 {
@@ -16,6 +17,7 @@ namespace BookApi.Models.ViewModels
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
+        [Required]
         public string Name { get; set; }
         /// <summary>
         /// Gets or Sets Address
@@ -27,6 +29,7 @@ namespace BookApi.Models.ViewModels
         public string Email { get; set; }
         /// <summary>
         /// Gets or Sets PhoneNumber
+        /// </summary>
         public string PhoneNumber { get; set; }
     }
 }
