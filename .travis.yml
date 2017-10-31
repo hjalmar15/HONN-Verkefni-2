@@ -1,12 +1,9 @@
 language: csharp
 
-install:
-- cd BookApi/Api
-- dotnet restore
-
 script:
-- cd BookApi/Api
+- cd .\BookApi\Api
+- dotnet restore
 - dotnet build
 - cd ..
-- cd Tests
+- cd .\Tests\
 - dotnet test 
