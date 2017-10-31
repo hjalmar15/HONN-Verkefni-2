@@ -1,6 +1,7 @@
 language: csharp
 
 install:
+- cd BookApi/Api
 - dotnet restore
 
 script:
